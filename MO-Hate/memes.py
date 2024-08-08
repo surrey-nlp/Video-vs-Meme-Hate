@@ -369,12 +369,12 @@ def train_and_validation(model, train_loader, valid_loader):
     #   print("Length of gold : ", len(valid_gold))
       print("Valid loss : ", valid_loss)
       print("Valid Accuracy : ", accuracy_score(valid_gold, valid_pred))
-      print("Valid Precision : ", precision_score(valid_gold, valid_pred, average = 'weighted'))
-      print("Valid Recall : ", recall_score(valid_gold, valid_pred, average = 'weighted'))
-      print("Valid F1 score : ", f1_score(valid_gold, valid_pred, average = 'weighted'))
+      print("Valid Precision : ", precision_score(valid_gold, valid_pred, average = 'macro'))
+      print("Valid Recall : ", recall_score(valid_gold, valid_pred, average = 'macro'))
+      print("Valid F1 score : ", f1_score(valid_gold, valid_pred, average = 'macro'))
       print("Valid AUC ROC : ", roc_auc_score(valid_gold, valid_pred))
 
-      curr_f1 = f1_score(valid_gold, valid_pred, average = 'weighted')
+      curr_f1 = f1_score(valid_gold, valid_pred, average = 'macro')
 
       if(curr_f1 > best_f1):
         best_f1 = curr_f1
@@ -390,9 +390,9 @@ def train_and_validation(model, train_loader, valid_loader):
 # test_pred, test_gold = test_epoch(model, test_loader)
 
 # test_accuracy = accuracy_score(test_gold, test_pred)
-# test_precision = precision_score(test_gold, test_pred, average = 'weighted')
-# test_recall = recall_score(test_gold, test_pred, average = 'weighted')
-# test_f1 = f1_score(test_gold, test_pred, average = 'weighted')
+# test_precision = precision_score(test_gold, test_pred, average = 'macro')
+# test_recall = recall_score(test_gold, test_pred, average = 'macro')
+# test_f1 = f1_score(test_gold, test_pred, average = 'macro')
 # test_auc_roc = roc_auc_score(test_gold, test_pred)
 
 # wandb.log({"Test Accuracy": test_accuracy, "Test Precision": test_precision, "Test Recall": test_recall, 

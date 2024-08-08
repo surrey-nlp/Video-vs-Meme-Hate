@@ -222,7 +222,7 @@ def eval_metrics(y_true, y_pred):
             roc_auc = 0.5  # Return a default value for binary classification
             print("Warning: ROC AUC score is not defined for a single class. Returning default value of 0.5.")
         else:
-            roc_auc = roc_auc_score(y_true, y_pred, average='weighted')
+            roc_auc = roc_auc_score(y_true, y_pred, average='macro')
     except Exception as e:
         print(f"Error in eval_metrics: {e}")
         return 0, 0, 0, 0, 0

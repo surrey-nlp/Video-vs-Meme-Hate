@@ -177,14 +177,14 @@ class Combined_model(nn.Module):
         #     padding_size = expected_input_size - inp.size(1)
         #     inp = torch.cat([inp, torch.zeros(inp.size(0), padding_size, device=inp.device)], dim=1)
 
-        inp = torch.cat((tex_out, vid_out, aud_out), dim = 1)
+        # inp = torch.cat((tex_out, vid_out, aud_out), dim = 1)
         # inp = torch.cat((torch.zeros_like(tex_out), vid_out, aud_out), dim = 1)
         # inp = torch.cat((tex_out, vid_out, torch.zeros_like(aud_out)), dim = 1)
         # inp = torch.cat((tex_out, torch.empty_like(vid_out), aud_out), dim = 1)
         # inp = torch.cat((torch.zeros_like(tex_out), torch.zeros_like(vid_out), torch.zeros_like(aud_out)), dim = 1)
         # inp = torch.cat((tex_out, torch.zeros_like(vid_out), torch.zeros_like(aud_out)), dim = 1)
         # inp = torch.cat((torch.zeros_like(tex_out), vid_out, torch.zeros_like(aud_out)), dim = 1)
-        # inp = torch.cat((torch.zeros_like(tex_out), torch.zeros_like(vid_out), aud_out), dim = 1)
+        inp = torch.cat((torch.zeros_like(tex_out), torch.zeros_like(vid_out), aud_out), dim = 1)
         # print("Input tensor: ", inp)
         out = self.fc_output(inp)
         return out
@@ -280,23 +280,23 @@ fc1_hidden_audio, fc2_hidden_audio = 128, 128
 
 # training parameters
 k = 2            # number of target category
-epochs = 5
+epochs = 20
 batch_size = 32
 learning_rate = 1e-4
 log_interval = 100
 
 
-# import wandb
-# wandb.init(
-#     project="hate-video-classification",
-#     config={
-#         "learning_rate": learning_rate,
-#         "architecture": "CLIP Text + Wav2Vec2 + CLIP Pooled (Concatenation)",
-#         "dataset": "HateMM",
-#         "epochs": epochs,
-#         "batch_size": batch_size,
-#     },
-# )
+import wandb
+wandb.init(
+    project="hate-video-classification",
+    config={
+        "learning_rate": learning_rate,
+        "architecture": "CLAP concat with empty tensors",
+        "dataset": "HateMM",
+        "epochs": epochs,
+        "batch_size": batch_size,
+    },
+)
 
 
 def train(log_interval, model, device, train_loader, optimizer, epoch):
@@ -333,8 +333,8 @@ def train(log_interval, model, device, train_loader, optimizer, epoch):
         loss.backward()
         optimizer.step()
 
-        # wandb.log({"loss": loss.item(), "accuracy": metrics['accuracy'], "f1": metrics['f1Score'], "mF1": metrics['mF1Score'], 
-        #            "auc": metrics['auc'], "precision": metrics['precision'], "recall": metrics['recall']})
+        wandb.log({"loss": loss.item(), "accuracy": metrics['accuracy'], "f1": metrics['f1Score'], "mF1": metrics['mF1Score'], 
+                   "auc": metrics['auc'], "precision": metrics['precision'], "recall": metrics['recall']})
 
         # if (batch_idx + 1) % log_interval == 0:
         print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.4f}, Accu: {:.4f}, MF1 Score: {:.4f}, F1 Score: {:.4f}, Area Under Curve: {:.4f}, Precision: {:.4f}, Recall Score: {:.4f}'.format(epoch + 1, N_count, len(train_loader.dataset), 100. * (batch_idx + 1) / len(train_loader), loss.item(), metrics['accuracy'], metrics['mF1Score'], metrics['f1Score'], metrics['auc'], metrics['precision'], metrics['recall']))
@@ -374,8 +374,8 @@ def validation(model, device, test_loader, testingType = "Test"):
     print("====================")
     metrics = evalMetric(all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy())
 
-    # wandb.log({f"{testingType}_loss": test_loss, f"{testingType}_accuracy": metrics['accuracy'], f"{testingType}_f1": metrics['f1Score'], f"{testingType}_mF1": metrics['mF1Score'],
-    #             f"{testingType}_auc": metrics['auc'], f"{testingType}_precision": metrics['precision'], f"{testingType}_recall": metrics['recall']})
+    wandb.log({f"{testingType}_loss": test_loss, f"{testingType}_accuracy": metrics['accuracy'], f"{testingType}_f1": metrics['f1Score'], f"{testingType}_mF1": metrics['mF1Score'],
+                f"{testingType}_auc": metrics['auc'], f"{testingType}_precision": metrics['precision'], f"{testingType}_recall": metrics['recall']})
 
     print('\n '+testingType+' set -> Average loss: {:.4f}, Accuracy: {:.4f}, MF1 Score: {:.4f}, F1 Score: {:.4f}, Area Under Curve: {:.4f}, Precision: {:.4f}, Recall Score: {:.4f}'.format(
                 test_loss, metrics['accuracy'], metrics['mF1Score'], metrics['f1Score'], metrics['auc'], metrics['precision'], metrics['recall']))

@@ -35,19 +35,16 @@ class MAF_visual(nn.Module):
         # Adjust the dimensions of visual_context to match the expected input shape
         visual_context = visual_context.repeat(1, 1, VISUAL_MAX_LEN // visual_context.shape[-1] + 1)[:, :, :VISUAL_MAX_LEN]
 
-        # print("Visual context shape : ", visual_context.shape)
-        # visual_context = visual_context.permute(0,2,1)
         visual_context = visual_context.reshape(-1, VISUAL_MAX_LEN)
         visual_context = self.visual_context_transform(visual_context.float())
         visual_context = visual_context.view(text_input.size(0), -1, SOURCE_MAX_LEN)
-        # visual_context = visual_context.permute(0,2,1)
 
         video_out = self.visual_context_attention(q=text_input,
                                                     k=text_input,
                                                     v=text_input,
                                                     context=visual_context)
 
-        weight_v = F.sigmoid(self.visual_gate(torch.cat([text_input, video_out], dim=-1)))
+        weight_v = F.sigmoid(self.visual_gate(torch.cat([torch.zeros_like(text_input), video_out], dim=-1)))
 
         # output = self.final_layer_norm(text_input + weight_a * audio_out + weight_v * video_out)
         output = self.final_layer_norm(text_input  + weight_v * video_out)

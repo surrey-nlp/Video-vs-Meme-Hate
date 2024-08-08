@@ -225,7 +225,7 @@ def eval_metrics(y_true, y_pred):
             roc_auc = 0.5  # Return a default value for binary classification
             print("Warning: ROC AUC score is not defined for a single class. Returning default value of 0.5.")
         else:
-            roc_auc = roc_auc_score(y_true, y_pred, average='weighted')
+            roc_auc = roc_auc_score(y_true, y_pred, average='macro')
     except Exception as e:
         print(f"Error in eval_metrics: {e}")
         return 0, 0, 0, 0, 0
@@ -490,7 +490,7 @@ test_model(model, test_loader, criterion)
 #     f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
 #     precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
 #     recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-#     roc_auc = roc_auc_score(y_true, y_pred, average='weighted')
+#     roc_auc = roc_auc_score(y_true, y_pred, average='macro')
 
 #     # print the actual and predicted labels for the all the test samples
 #     print(f"Actual labels: {y_true}")
