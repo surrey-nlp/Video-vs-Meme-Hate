@@ -44,7 +44,7 @@ class MAF_acoustic(nn.Module):
                                                     v=text_input,
                                                     context=acoustic_context)
 
-        weight_a = F.sigmoid(self.acoustic_gate(torch.cat([torch.zeros_like(text_input), audio_out], dim=-1)))
+        weight_a = F.sigmoid(self.acoustic_gate(torch.cat([text_input, torch.zeros_like(audio_out)], dim=-1)))
 
         # output = self.final_layer_norm(text_input + weight_a * audio_out + weight_v * video_out)
         output = self.final_layer_norm(text_input + weight_a * audio_out)

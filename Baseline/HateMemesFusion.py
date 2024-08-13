@@ -67,9 +67,11 @@ class Combined_model(nn.Module):
         # Additional hidden layers
         self.fc1 = nn.Linear(128, 256)  # Adjust the input size of fc1 to match the output size of the element-wise product
         self.relu1 = nn.ReLU()
-        self.fc2 = nn.Linear(256, 128)
+        self.fc2 = nn.Linear(256, 256)
         self.relu2 = nn.ReLU()
-        self.fc_output = nn.Linear(128, num_classes)
+        self.fc3 = nn.Linear(256, 128)
+        self.relu3 = nn.ReLU()
+        self.fc_output = nn.Linear(128, 1)
 
     def forward(self, x_text, x_img):
         if x_text is not None:
@@ -90,9 +92,9 @@ class Combined_model(nn.Module):
             elif tex_out.ndim > img_out.ndim:
                 img_out = img_out.unsqueeze(dim=1)
         
-        # inp = torch.cat((tex_out, img_out), dim=1)
+        inp = torch.cat((tex_out, img_out), dim=1)
         # inp = torch.cat((torch.zeros_like(tex_out), img_out), dim=1)
-        inp = tex_out * img_out # Element-wise multiplication
+        # inp = tex_out * img_out # Element-wise multiplication
         inp = inp.view(inp.size(0), -1)  # Flatten the second dimension
 
         # Ensure that the input tensor shape matches the linear layer's weight tensor shape
@@ -104,11 +106,6 @@ class Combined_model(nn.Module):
         # #     inp = F.pad(inp, (0, padding_size), "constant", 0)
         # #     inp = inp.view(inp.size(0), 128)
 
-        # Print the shapes for debugging
-        # print(f"tex_out shape: {tex_out.shape}")
-        # print(f"img_out shape: {img_out.shape}")
-        # print(f"inp shape: {inp.shape}")
-
         # self.fc_output = nn.Linear(inp.size(1), self.num_classes).to(inp.device)  # Create the linear layer on the same device as inp
         # inp = inp.to(device)  # Move inp tensor to the same device as the model
 
@@ -119,9 +116,12 @@ class Combined_model(nn.Module):
         inp = self.fc2(inp)
         inp = self.relu2(inp)
         inp = self.dropout(inp)
+        inp = self.fc3(inp)
+        inp = self.relu3(inp)
+        inp = self.dropout(inp)
 
-        out = self.fc_output(inp)
-        return out
+        logits = self.fc_output(inp).squeeze(1)
+        return logits
 
 class Dataset_ViT(data.Dataset):
     def __init__(self, dataset, split='train'):
@@ -215,9 +215,9 @@ with open(FOLDER_NAME + 'hatememes_ext_test_CLIP_proj_embedding.pkl', 'rb') as f
 def eval_metrics(y_true, y_pred):
     try:
         accuracy = accuracy_score(y_true, y_pred)
-        f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-        precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-        recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
+        f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
+        precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
+        recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
         
         # Check if there is only one class present in y_true
         num_classes = len(unique_labels(y_true))
@@ -280,14 +280,14 @@ fc2_hidden = 128
 num_classes = 2
 initial_lr = 1e-4
 num_epochs = 20
-batch_size = 32
+batch_size = 64
 
 
 wandb.init(
     project="hate-memes-classification",
     config={
         "learning_rate": initial_lr,
-        "architecture": "CLIP Text + CLIP Image (EW Product - Projection Layer)",
+        "architecture": "CLIP Text + CLIP Image (Concat - Projection Layer)",
         "dataset": "Hateful Memes",
         "epochs": num_epochs,
         "batch_size": batch_size,
@@ -328,7 +328,7 @@ if torch.cuda.device_count() > 1:
     model = nn.DataParallel(model)
 
 # Loss and optimizer
-criterion = nn.CrossEntropyLoss()
+criterion = nn.BCEWithLogitsLoss()
 weight_decay = 1e-4
 # l1_lambda = 0.001  # L1 regularization strength, make weight_decay = 0
 optimizer = torch.optim.Adam(model.parameters(), lr=initial_lr, weight_decay=weight_decay)
@@ -340,160 +340,94 @@ def train_model(model, train_loader, val_loader, num_epochs, criterion, optimize
     best_model_state = None
     epochs_without_improvement = 0
 
-    for epoch in range(num_epochs):
+    for epoch in tqdm(range(num_epochs)):
         model.train()
         train_loss = 0
-        # Use tqdm for tracking progress
-        progress_bar = tqdm(train_loader, total=len(train_loader), desc=f"Epoch {epoch + 1}/{num_epochs}")
-
-        for i, (text, image, labels) in enumerate(progress_bar):
-            if text is None or image is None:
-                # Skip samples with missing data
-                continue
-            train_y_true = []
-            train_y_pred = []
+        for text, image, labels in train_loader:
             text = text.to(device)
             image = image.to(device)
             labels = labels.to(device)
 
-            # Forward pass
-            outputs = model(text, image)
-            # loss = l1_regularized_loss(outputs, labels, model, l1_lambda)
-            # loss = label_smoothing_loss(outputs, labels)
-            loss = criterion(outputs, labels)
-
-            # Backward and optimize
             optimizer.zero_grad()
+            logits = model(text, image)
+            loss = criterion(logits, labels.float())
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
 
-            _, predicted = torch.max(outputs.data, 1)
-            train_y_true.extend(labels.cpu().numpy())
-            train_y_pred.extend(predicted.cpu().numpy())
-
-            # Update the progress bar description
-            progress_bar.set_postfix(loss=train_loss / (i + 1))
-
-        train_loss /= len(train_loader)
-
-        val_loss = 0
         model.eval()
+        val_loss = 0
+        val_y_true = []
+        val_y_pred = []
         with torch.no_grad():
-            val_y_true = []
-            val_y_pred = []
             for text, image, labels in val_loader:
                 text = text.to(device)
                 image = image.to(device)
                 labels = labels.to(device)
 
-                outputs = model(text, image)
-                loss = criterion(outputs, labels)
+                logits = model(text, image)
+                loss = criterion(logits, labels.float())
                 val_loss += loss.item()
 
-                _, predicted = torch.max(outputs.data, 1)
-                val_y_true.extend(labels.cpu().numpy())
-                val_y_pred.extend(predicted.cpu().numpy())
+                val_y_true += labels.cpu().numpy().tolist()
+                val_y_pred += torch.sigmoid(logits).cpu().numpy().tolist()
 
-        val_loss /= len(val_loader)
-        lr_scheduler.step(val_loss)  # Update learning rate based on validation loss
+        val_y_true = np.array(val_y_true)
+        val_y_pred = np.array(val_y_pred)
+        val_y_pred = np.where(val_y_pred >= 0.6, 1, 0)
 
-        wandb.log({"Train Loss": train_loss, "Validation Loss": val_loss, 
-                   "Train Accuracy": eval_metrics(train_y_true, train_y_pred)[0], 
-                   "Validation Accuracy": eval_metrics(val_y_true, val_y_pred)[0],
-                   "Train ROC AUC": eval_metrics(train_y_true, train_y_pred)[4], "Validation ROC AUC": eval_metrics(val_y_true, val_y_pred)[4]})
+        accuracy, f1, precision, recall, roc_auc = eval_metrics(val_y_true, val_y_pred)
+        print(f'Epoch {epoch+1}/{num_epochs}, Train Loss: {train_loss/len(train_loader):.4f}, Val Loss: {val_loss/len(val_loader):.4f}')
+        print(f'Val Accuracy: {accuracy:.4f}, Val F1: {f1:.4f}, Val Precision: {precision:.4f}, Val Recall: {recall:.4f}, Val ROC AUC: {roc_auc:.4f}')
+
+        wandb.log({"Train Loss": train_loss/len(train_loader), "Validation Loss": val_loss/len(val_loader), "Validation Accuracy": accuracy, "Val F1": f1, 
+                    "Validation Precision": precision, "Validation Recall": recall, "Validation ROC AUC": roc_auc})
+
+        lr_scheduler.step(val_loss)
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            # torch.save(model.state_dict(), 'best_model.pth')
-            best_model_state = copy.deepcopy(model.state_dict())
+            best_model_state = model.state_dict()
             epochs_without_improvement = 0
         else:
             epochs_without_improvement += 1
             if epochs_without_improvement >= patience:
-                print(f"Early stopping after {epoch + 1} epochs.")
+                print("Early stopping")
                 break
 
-        print(f'Epoch [{epoch + 1}/{num_epochs}], Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}, Train Accuracy: {eval_metrics(train_y_true, train_y_pred)[0]:.4f}, Validation Accuracy: {eval_metrics(val_y_true, val_y_pred)[0]:.4f}')
-
     if best_model_state is not None:
-        torch.save(best_model_state, 'clipT_clipI_proj_ew_memes.pth')
+        model.load_state_dict(best_model_state)
 
 train_model(model, train_loader, val_loader, num_epochs, criterion, optimizer, initial_lr)
 
 # Test the model
 def test_model(model, test_loader, criterion):
-    model.load_state_dict(torch.load('clipT_clipI_proj_ew_memes.pth'))
     model.eval()
     test_loss = 0
+    y_true = []
+    y_pred = []
     with torch.no_grad():
-        y_true = []
-        y_pred = []
         for text, image, labels in test_loader:
             text = text.to(device)
             image = image.to(device)
             labels = labels.to(device)
 
-            outputs = model(text, image)
-            loss = criterion(outputs, labels)
+            logits = model(text, image)
+            loss = criterion(logits, labels.float())
             test_loss += loss.item()
 
-            _, predicted = torch.max(outputs.data, 1)
-            y_true.extend(labels.cpu().numpy())
-            y_pred.extend(predicted.cpu().numpy())
+            y_true += labels.cpu().numpy().tolist()
+            y_pred += torch.sigmoid(logits).cpu().numpy().tolist()
 
-        accuracy, f1, precision, recall, roc_auc = eval_metrics(y_true, y_pred)
-        wandb.log({"Test Accuracy": accuracy, "Test F1": f1, "Test Precision": precision, "Test Recall": recall, "Test ROC AUC": roc_auc})
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    y_pred = np.where(y_pred >= 0.6, 1, 0)
 
-        print(f'Test Accuracy: {accuracy:.4f}, Test F1: {f1:.4f}, Test Precision: {precision:.4f}, Test Recall: {recall:.4f}, Test ROC AUC: {roc_auc:.4f}')
+    accuracy, f1, precision, recall, roc_auc = eval_metrics(y_true, y_pred)
+    print(f'Test Loss: {test_loss/len(test_loader):.4f}')
+    print(f'Test Accuracy: {accuracy:.4f}, Test F1: {f1:.4f}, Test Precision: {precision:.4f}, Test Recall: {recall:.4f}, Test ROC AUC: {roc_auc:.4f}')
+
+    wandb.log({"Test Loss": test_loss/len(test_loader), "Test Accuracy": accuracy, "Test F1": f1,
+                "Test Precision": precision, "Test Recall": recall, "Test ROC AUC": roc_auc})
 
 test_model(model, test_loader, criterion)
-
-
-
-
-# Randomly sample 5 test images, their predictions, and the true labels
-# model.load_state_dict(torch.load('best_model.pth'))
-# model.eval()
-# with torch.no_grad():
-#     for i in range(5):
-#         text, image, label = ext_data['test'][i]
-#         text = text.unsqueeze(0).to(device)
-#         image = image.unsqueeze(0).to(device)
-
-#         output = model(text, image)
-#         _, predicted = torch.max(output.data, 1)
-#         print(f"Predicted: {predicted.item()}, True label: {label}")
-
-
-
-# model.load_state_dict(torch.load('clip_dino_memes.pth'))
-# model.eval()
-# test_loss = 0
-# with torch.no_grad():
-#     y_true = []
-#     y_pred = []
-#     for text, image, labels in test_loader:
-#         text = text.to(device)
-#         image = image.to(device)
-#         labels = labels.to(device)
-
-#         outputs = model(text, image)
-#         loss = criterion(outputs, labels)
-#         test_loss += loss.item()
-
-#         _, predicted = torch.max(outputs.data, 1)
-#         y_true.extend(labels.cpu().numpy())
-#         y_pred.extend(predicted.cpu().numpy())
-
-#     accuracy = accuracy_score(y_true, y_pred)
-#     f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-#     precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-#     recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-#     roc_auc = roc_auc_score(y_true, y_pred, average='macro')
-
-#     # print the actual and predicted labels for the all the test samples
-#     print(f"Actual labels: {y_true}")
-#     print(f"Predicted labels: {y_pred}")
-
-#     print(f'Test Accuracy: {accuracy:.4f}, Test F1: {f1:.4f}, Test Precision: {precision:.4f}, Test Recall: {recall:.4f}, Test ROC AUC: {roc_auc:.4f}')

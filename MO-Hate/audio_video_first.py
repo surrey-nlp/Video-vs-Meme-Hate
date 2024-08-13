@@ -109,11 +109,11 @@ class MultimodalAudio(torch.nn.Module):
     visual_input = self.visual_dimension_transform(visual_input)
 
     bart_output = self.bart_model(input_ids, attention_mask)['last_hidden_state']
-    output_one = self.maf_one(main_input = acoustic_input, context_input = visual_input)
-    output_two = self.maf_two(main_input = output_one, context_input = bart_output)
+    output_one = self.maf_one(main_input = bart_output, context_input = torch.zeros_like(visual_input))
+    output_two = self.maf_two(main_input = output_one, context_input = acoustic_input)
     
-    # final_out = output_one[:, -1, :]
-    final_out = output_two[:, -1, :]
+    final_out = output_one[:, -1, :]
+    # final_out = output_two[:, -1, :]
     # final_out = acoustic_input[:, -1, :]
 
     final_out = self.classification_head(final_out)

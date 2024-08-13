@@ -212,9 +212,9 @@ with open(FOLDER_NAME + 'hatememesext_test_VITembedding.pkl', 'rb') as fp:
 def eval_metrics(y_true, y_pred):
     try:
         accuracy = accuracy_score(y_true, y_pred)
-        f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-        precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
-        recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), zero_division='warn')
+        f1 = f1_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
+        precision = precision_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
+        recall = recall_score(y_true, y_pred, labels = np.unique(y_pred), average='macro', zero_division='warn')
         
         # Check if there is only one class present in y_true
         num_classes = len(unique_labels(y_true))
@@ -504,21 +504,3 @@ def test_model(model, test_loader, criterion):
         print(f'Test Accuracy: {accuracy:.4f}, Test F1: {f1:.4f}, Test Precision: {precision:.4f}, Test Recall: {recall:.4f}, Test ROC AUC: {roc_auc:.4f}')
 
 test_model(model, test_loader, criterion)
-
-
-
-
-# Randomly sample 5 test images, their predictions, and the true labels
-# model.load_state_dict(torch.load('best_model.pth'))
-# model.eval()
-# with torch.no_grad():
-#     # take 5 random samples from the test set
-#     for i in np.random.randint(0, len(ext_data['test']), 5):
-#         text, image, label = ext_data['test'][i]
-#         text = text.unsqueeze(0).to(device)
-#         image = image.unsqueeze(0).to(device)
-
-#         output = model(text, image)
-#         _, predicted = torch.max(output.data, 1)
-#         print(f"Predicted: {predicted.item()}, True label: {label}")
-

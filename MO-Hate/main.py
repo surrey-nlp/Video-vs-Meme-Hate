@@ -46,10 +46,6 @@ model = MultimodalBartForSequenceClassification.from_pretrained("facebook/bart-b
 tokenizer = BartTokenizerFast.from_pretrained('facebook/bart-base')
 # print("Tokenizer : ", tokenizer)
 
-# num_param = sum(p.numel() for p in model.parameters())
-# print("Total parameters : ", num_param/1e6)
-
-
 p = {
         'additional_special_tokens' : ['[CONTEXT]', '[UTTERANCE]']
         # 'additional_special_tokens' : ['[UTTERANCE]']
@@ -62,6 +58,8 @@ tokenizer.add_special_tokens(p)
 
 # model = MultimodalAudio()     # for audio/video first models
 
+num_param = sum(p.numel() for p in model.parameters())
+print("Total parameters : ", num_param/1e6)
 
 class HateMMDataset(data.Dataset):
     "Characterizes a dataset for PyTorch"
@@ -149,7 +147,7 @@ wandb.init(
     project="hate-video-classification",
     config={
         "learning_rate": LEARNING_RATE,
-        "architecture": "MultimodalBART + Audio@4 + Video@5",
+        "architecture": "BART with empty tensors",
         "dataset": "HateMM",
         "epochs": epochs,
         "batch_size": batch_size,

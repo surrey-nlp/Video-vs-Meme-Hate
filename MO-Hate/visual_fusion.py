@@ -44,7 +44,7 @@ class MAF_visual(nn.Module):
                                                     v=text_input,
                                                     context=visual_context)
 
-        weight_v = F.sigmoid(self.visual_gate(torch.cat([torch.zeros_like(text_input), video_out], dim=-1)))
+        weight_v = F.sigmoid(self.visual_gate(torch.cat([text_input, torch.zeros_like(video_out)], dim=-1)))
 
         # output = self.final_layer_norm(text_input + weight_a * audio_out + weight_v * video_out)
         output = self.final_layer_norm(text_input  + weight_v * video_out)
