@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from transformers import AutoProcessor, CLIPVisionModel
 
-FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
 CLIP_FOLDER = os.path.join(FOLDER_NAME, 'CLIP_lhs/')
 
 if not os.path.exists(CLIP_FOLDER):

@@ -1,8 +1,8 @@
-FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
 
 import os
 import pickle
-import warnings
+import wandb
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,8 +10,6 @@ import torch.nn.functional as F
 import torch.utils.data as data
 from sklearn.metrics import accuracy_score, f1_score, roc_curve, auc, recall_score, precision_score
 from tqdm import tqdm
-from sklearn.metrics import *
-import torch.nn.functional as F
 import random
 
 def fix_the_random(seed_val = 2021):
@@ -285,8 +283,6 @@ batch_size = 32
 learning_rate = 1e-4
 log_interval = 100
 
-
-import wandb
 wandb.init(
     project="hate-video-classification",
     config={
@@ -297,7 +293,6 @@ wandb.init(
         "batch_size": batch_size,
     },
 )
-
 
 def train(log_interval, model, device, train_loader, optimizer, epoch):
     model.train()

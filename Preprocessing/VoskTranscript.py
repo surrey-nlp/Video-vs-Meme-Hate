@@ -5,7 +5,7 @@ import json
 from pydub import AudioSegment
 
 # Path to the Dataset folder containing video files
-video_folder = "/backup/girish_datasets/HateMM/non_hate_videos/"
+video_folder = "/backup/anonymous_datasets/HateMM/non_hate_videos/"
 #
 # Initialize the Vosk model with the language code
 model = Model("./vosk-model-en-us-0.22/")

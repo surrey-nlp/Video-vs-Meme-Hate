@@ -12,7 +12,7 @@ from multimodal_bart_downstream import MultimodalBartForSequenceClassification
 from transformers import BartModel
 from audio_video_first import MultimodalAudio
 
-FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 LEARNING_RATE = 1e-4
 

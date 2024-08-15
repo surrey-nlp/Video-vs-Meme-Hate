@@ -14,7 +14,7 @@ import torch.nn.functional as F
 from datasets import load_dataset
 dataset = load_dataset('limjiayi/hateful_memes_expanded')
 
-FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

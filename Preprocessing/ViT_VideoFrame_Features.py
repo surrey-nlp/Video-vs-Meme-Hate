@@ -8,7 +8,7 @@ from tqdm import tqdm
 from transformers import ViTFeatureExtractor, ViTModel
 from PIL import Image
 
-FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
 VITF_FOLDER = os.path.join(FOLDER_NAME, 'VITF')
 
 # Create the VITF directory if it does not exist
@@ -32,7 +32,7 @@ import pickle
 with open(FOLDER_NAME+'final_allImageFrames.pkl', 'rb') as fp:
     allVidList = pickle.load(fp)
 
-data_image_path = "/backup/girish_datasets/HateMM_Images/"
+data_image_path = "/backup/anonymous_datasets/HateMM_Images/"
 
 def extract_vit_features(video_frames):
     # Extract a unique identifier for the video, assuming the first frame's path can be used for this

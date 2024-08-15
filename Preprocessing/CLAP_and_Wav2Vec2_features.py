@@ -10,7 +10,7 @@ from tqdm import tqdm
 from transformers import AutoProcessor, ClapAudioModel
 from transformers import Wav2Vec2Model, Wav2Vec2FeatureExtractor
 
-FOLDER_NAME ='/backup/girish_datasets/HateMM/'
+FOLDER_NAME ='/backup/anonymous_datasets/HateMM/'
 
 def extract_features(audio_path, feature_type):
     if feature_type == "CLAP":
@@ -70,7 +70,7 @@ def extract_features(audio_path, feature_type):
 
 
 def extract_all_features(feature_type):
-    FOLDER_NAME = '/backup/girish_datasets/HateMM/'
+    FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
     with open(FOLDER_NAME + 'final_allNewData.pkl', 'rb') as fp:
         allDataAnnotation = pickle.load(fp)
         allVidList = list(allDataAnnotation.values())
