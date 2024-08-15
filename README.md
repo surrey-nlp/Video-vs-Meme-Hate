@@ -1,6 +1,6 @@
-# Hate Speech Detection in Memes and Videos
+# Hate Speech Detection in Videos and Memes 
 
-This repository contains code for detecting hate speech in memes and videos using various multimodal architectures. The project includes Baseline and MO-Hate architectures.
+This repository contains code for detecting hate speech in videos and memes using multimodal architectures. The project includes Baseline and MO-Hate architectures.
 
 ## Table of Contents
 - [Dataset](#dataset)
@@ -8,14 +8,15 @@ This repository contains code for detecting hate speech in memes and videos usin
 - [Preprocessing](#preprocessing)
 - [Running Baseline Experiments](#running-baseline-architecture-experiments)
 - [Running MO-Hate Architecture Experiments](#running-mo-hate-architecture-experiments)
+- [Testing on Specific Videos/Memes](#testing-on-specific-videos-or-memes)
 
 ## Dataset
 
 ### Download
-The dataset used in this project is the Hateful Memes dataset. You can download it from the following link:
+The datasets used in this project are HateMM and Hateful Memes. You can download it from the following link:
 
 - [HateMM Dataset](https://doi.org/10.5281/zenodo.7799469)
-- [Hateful Memes Dataset](https://www.kaggle.com/datasets/chauri/facebook-hateful-memes) or (https://huggingface.co/datasets/limjiayi/hateful_memes_expanded)
+- Hateful Memes Dataset on [Kaggle](https://www.kaggle.com/datasets/chauri/facebook-hateful-memes) or [Hugging Face](https://huggingface.co/datasets/limjiayi/hateful_memes_expanded)
 
 ## Installation
 
@@ -27,54 +28,86 @@ pip install -r requirements.txt
 
 ## Preprocessing
 
-Before running the experiments, you need to preprocess the dataset to extract features. The preprocessing scripts are located in the [`Preprocessing/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fhome%2Fdiptesh%2Fworkspace%2FVideo-vs-Meme-Hate%2FPreprocessing%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "/home/diptesh/workspace/Video-vs-Meme-Hate/Preprocessing/") directory.
+Before running the experiments, you need to preprocess the dataset to extract features. The preprocessing scripts are located in the [`Preprocessing/`]("Preprocessing/") directory. Make sure to specify the correct path to the downloaded datasets in the below code files.
 
-1. **Audio Features**:
+1. **Video Frames and Audio Transcript**:
+    ```sh
+    python Preprocessing/frameExtract.py
+    ```
+    and then
+    ```sh
+    python Preprocessing/WhisperTranscript.py
+    ```
+
+2. **Audio Features**:
     ```sh
     python Preprocessing/AudioMFCC_Features.py
     ```
+    or
+    ```sh
+    python Preprocessing/CLAP_and_Wav2Vec2_features.py
+    ```
 
-2. **Text Features**:
+3. **Text Features**:
     ```sh
     python Preprocessing/BERT_HXP_Embeddings.py
     ```
 
-3. **Image Features**:
+4. **Image Features**:
     ```sh
     python Preprocessing/CLIP_image_features.py
     ```
+    or
+    ```sh
+    python Preprocessing/DINOv2_image_features.py
+    ```
+    or
+    ```sh
+    python Preprocessing/ViT_Memes_Features.py
+    ```
 
-4. **Video Features**:
+5. **Video Features**:
     ```sh
     python Preprocessing/ViT_VideoFrame_Features.py
     ```
 
 ## Running Baseline Experiments
 
-The baseline experiments are implemented in the [`Baseline/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fhome%2Fdiptesh%2Fworkspace%2FVideo-vs-Meme-Hate%2FBaseline%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "/home/diptesh/workspace/Video-vs-Meme-Hate/Baseline/") directory. To run the baseline experiments, follow these steps:
+The Baseline architecture experiments are implemented in the [`Baseline/`]("Baseline/") directory. To run the baseline experiments, follow these steps:
 
-1. **Train the Baseline Model**:
+1. **Train the Baseline Model on HateMM**:
+    ```sh
+    python Baseline/HateMM_Fusion.py
+    ```
+
+2. **Train the Baseline Model on Hateful Memes**:
     ```sh
     python Baseline/HateMemesFusion.py
     ```
 
-2. **Evaluate the Baseline Model**:
-    ```sh
-    python test_memes.py
-    ```
-
 ## Running MO-Hate Architecture Experiments
 
-The MO-Hate architecture experiments are implemented in the [`MO-Hate/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fhome%2Fdiptesh%2Fworkspace%2FVideo-vs-Meme-Hate%2FMO-Hate%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "/home/diptesh/workspace/Video-vs-Meme-Hate/MO-Hate/") directory. To run these experiments, follow these steps:
+The MO-Hate architecture experiments are implemented in the [`MO-Hate/`]("MO-Hate/") directory. To run these experiments, follow these steps:
 
-1. **Train the MO-Hate Model**:
+1. **Train the MO-Hate Model on HateMM**:
     ```sh
     python MO-Hate/main.py
     ```
 
-2. **Evaluate the MO-Hate Model**:
+2. **Evaluate the MO-Hate Model on Hateful Memes**:
+    ```sh
+    python MO-Hate/memes.py
+    ```
+
+## Testing on Specific Videos/Memes
+
+Load the trained model for testing either on random or specific images from the test set:
     ```sh
     python test_videos.py
+    ```
+    or
+    ```sh
+    python test_memes.py
     ```
 
 Some parts of the preprocessing and training codes for Baseline and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
