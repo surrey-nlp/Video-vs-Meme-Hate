@@ -102,6 +102,7 @@ The MO-Hate architecture experiments are implemented in the [`MO-Hate/`]("MO-Hat
 ## Testing on Specific Videos/Memes
 
 Load the trained model for testing either on random or specific images from the test set:
+
     ```sh
     python test_videos.py
     ```
@@ -110,6 +111,6 @@ Load the trained model for testing either on random or specific images from the 
     python test_memes.py
     ```
 
-Some parts of the preprocessing and training codes for Baseline and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
+**Note**: Some parts of the preprocessing and training codes for Baseline and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
 - [HateMM](https://github.com/hate-alert/HateMM)
 - [MO-Sarcation](https://github.com/mohit2b/MO-Sarcation)
