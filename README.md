@@ -103,12 +103,12 @@ The MO-Hate architecture experiments are implemented in the [`MO-Hate/`]("MO-Hat
 
 For testing either on random or specific images from the test set, follow these steps:
 
-**Load the trained model and run the below file**:
-    ```sh
+**Load the trained model and run the file**:
+    ```
     python test_videos.py
     ```
     or
-    ```sh
+    ```
     python test_memes.py
     ```
 
