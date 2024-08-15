@@ -94,15 +94,16 @@ The MO-Hate architecture experiments are implemented in the [`MO-Hate/`]("MO-Hat
     python MO-Hate/main.py
     ```
 
-2. **Evaluate the MO-Hate Model on Hateful Memes**:
+2. **Train the MO-Hate Model on Hateful Memes**:
     ```sh
     python MO-Hate/memes.py
     ```
 
 ## Testing on Specific Videos/Memes
 
-Load the trained model for testing either on random or specific images from the test set:
+For testing either on random or specific images from the test set, follow these steps:
 
+**Load the trained model and run the below file**:
     ```sh
     python test_videos.py
     ```
