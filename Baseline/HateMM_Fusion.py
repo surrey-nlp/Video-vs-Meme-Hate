@@ -1,4 +1,4 @@
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 
 import os
 import pickle

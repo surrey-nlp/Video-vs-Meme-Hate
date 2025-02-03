@@ -5,7 +5,7 @@ import torch
 from tqdm import tqdm
 from transformers import AutoTokenizer, CLIPTextModel, CLIPTextModelWithProjection
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 
 # from transformers import AutoTokenizer, ClapTextModel
 

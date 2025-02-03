@@ -10,7 +10,7 @@ from transformers import ViTFeatureExtractor, ViTModel
 from datasets import load_dataset
 dataset = load_dataset('limjiayi/hateful_memes_expanded')
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 
 feature_extractor = ViTFeatureExtractor.from_pretrained("google/vit-base-patch16-224-in21k")
 model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")

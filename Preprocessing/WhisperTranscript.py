@@ -9,7 +9,7 @@ processor = AutoProcessor.from_pretrained("openai/whisper-tiny.en")
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny.en")
 
 # Path to the Dataset folder containing video files
-video_folder = "/backup/anonymous_datasets/HateMM/hate_videos"
+video_folder = "/backup/girish_datasets/HateMM/hate_videos"
 
 # Path to the log file that keeps track of processed videos
 processed_log_path = "processed_audios.txt"

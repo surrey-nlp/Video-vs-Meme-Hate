@@ -24,7 +24,7 @@ def add_transcripts_to_pickle(directory, pickle_file):
     with open(pickle_file, 'wb') as fp:
         pickle.dump(existing_data, fp)
 
-# add_transcripts_to_pickle('/backup/anonymous_datasets/HateMM/hate_videos/', '/backup/anonymous_datasets/HateMM/all_whisper_tiny_transcripts.pkl')
+# add_transcripts_to_pickle('/backup/girish_datasets/HateMM/hate_videos/', '/backup/girish_datasets/HateMM/all_whisper_tiny_transcripts.pkl')
 
 
 def add_audio_paths_to_pickle(directory, pickle_file):
@@ -44,7 +44,7 @@ def add_audio_paths_to_pickle(directory, pickle_file):
     with open(pickle_file, 'wb') as fp:
         pickle.dump(existing_data, fp)
 
-# add_audio_paths_to_pickle('/backup/anonymous_datasets/HateMM/non_hate_videos/', '/backup/anonymous_datasets/HateMM/final_allVideos.p')
+# add_audio_paths_to_pickle('/backup/girish_datasets/HateMM/non_hate_videos/', '/backup/girish_datasets/HateMM/final_allVideos.p')
 
 
 def add_video_frames_paths_to_pickle(directory, pickle_file):
@@ -73,7 +73,7 @@ def add_video_frames_paths_to_pickle(directory, pickle_file):
     with open(pickle_file, 'wb') as fp:
         pickle.dump(existing_data, fp)
 
-# add_video_frames_paths_to_pickle('/backup/anonymous_datasets/HateMM_Images/', '/backup/anonymous_datasets/HateMM/final_allImageFrames.p')
+# add_video_frames_paths_to_pickle('/backup/girish_datasets/HateMM_Images/', '/backup/girish_datasets/HateMM/final_allImageFrames.p')
 
 
 
@@ -106,8 +106,8 @@ def prepare_folds_data(annotations_path, output_path):
     print("Fold details saved to:", output_path)
 
 # Specify the paths
-annotations_path = '/backup/anonymous_datasets/HateMM/HateMM_annotation.csv'
-output_path = '/backup/anonymous_datasets/HateMM/noFoldDetails.pkl'
+annotations_path = '/backup/girish_datasets/HateMM/HateMM_annotation.csv'
+output_path = '/backup/girish_datasets/HateMM/noFoldDetails.pkl'
 
 # Call the function
 # prepare_folds_data(annotations_path, output_path)
@@ -135,5 +135,5 @@ def convert_list_to_dict_in_pickle_files(directory):
             print(f"Converted {filename} to dictionary format.")
 
 # Specify the directory containing the .pkl files
-VITF_FOLDER = '/backup/anonymous_datasets/HateMM/CLIP_lhs/'
+VITF_FOLDER = '/backup/girish_datasets/HateMM/CLIP_lhs/'
 # convert_list_to_dict_in_pickle_files(VITF_FOLDER)

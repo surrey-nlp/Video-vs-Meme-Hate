@@ -5,7 +5,7 @@ import pickle, os
 from tqdm import tqdm
 import torch.nn as nn
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 
 class Text_Model(nn.Module):
     def __init__(self, model_name):

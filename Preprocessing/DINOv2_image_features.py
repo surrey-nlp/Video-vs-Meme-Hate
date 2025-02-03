@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from transformers import AutoImageProcessor, AutoModel
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 DINOv2_FOLDER = os.path.join(FOLDER_NAME, 'DINOv2_lhs/')
 
 if not os.path.exists(DINOv2_FOLDER):

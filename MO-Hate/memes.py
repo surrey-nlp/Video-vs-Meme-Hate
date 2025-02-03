@@ -15,7 +15,7 @@ from audio_video_first import MultimodalAudio
 from datasets import load_dataset
 dataset = load_dataset('limjiayi/hateful_memes_expanded')
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 LEARNING_RATE = 1e-4
 

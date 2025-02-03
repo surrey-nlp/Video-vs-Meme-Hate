@@ -6,7 +6,7 @@ from tqdm import tqdm
 import pickle
 import traceback
 
-FOLDER_NAME ='/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME ='/backup/girish_datasets/HateMM/'
 
 def extract_mfcc(path):
     try:

@@ -4,7 +4,7 @@ from Baseline.HateMM_Fusion import Text_Model, Aud_Model, Combined_model, LSTM
 from Baseline.HateMM_Fusion import HateMM_Dataset
 import torch.nn as nn
 
-FOLDER_NAME = '/backup/anonymous_datasets/HateMM/'
+FOLDER_NAME = '/backup/girish_datasets/HateMM/'
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
