@@ -1,8 +1,8 @@
 import torch
 import pickle
 from torch.utils import data
-from Baseline.HateMemesFusion import Dataset_ViT, collate_fn
-from Baseline.HateMemesFusion import Text_Model, Image_Model, Combined_model
+from Simple-Fusion.HateMemesFusion import Dataset_ViT, collate_fn
+from Simple-Fusion.HateMemesFusion import Text_Model, Image_Model, Combined_model
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

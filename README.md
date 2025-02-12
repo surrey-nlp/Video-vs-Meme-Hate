@@ -1,12 +1,12 @@
 # Hate Speech Detection in Videos and Memes 
 
-This repository contains code for detecting hate speech in videos and memes using multimodal architectures. The project includes Baseline and MO-Hate architectures.
+This repository contains code for detecting hate speech in videos and memes using multimodal architectures. The project includes Simple Embedding Fusion (aka Simple Fusion) and MO-Hate architectures.
 
 ## Table of Contents
 - [Dataset](#dataset)
 - [Installation](#installation)
 - [Preprocessing](#preprocessing)
-- [Running Baseline Experiments](#running-baseline-architecture-experiments)
+- [Running Simple Fusion Experiments](#running-simple-fusion-architecture-experiments)
 - [Running MO-Hate Architecture Experiments](#running-mo-hate-architecture-experiments)
 - [Testing on Specific Videos/Memes](#testing-on-specific-videos-or-memes)
 
@@ -71,18 +71,18 @@ Before running the experiments, you need to preprocess the dataset to extract fe
     python Preprocessing/ViT_VideoFrame_Features.py
     ```
 
-## Running Baseline Experiments
+## Running Simple Embedding Fusion Experiments
 
-The Baseline architecture experiments are implemented in the [`Baseline/`]("Baseline/") directory. To run the baseline experiments, follow these steps:
+The Simple Fusion architecture experiments are implemented in the [`Simple Fusion/`]("Simple-Fusion/") directory. To run the simple fusion experiments, follow these steps:
 
-1. **Train the Baseline Model on HateMM**:
+1. **Train the Simple Fusion Model on HateMM**:
     ```sh
-    python Baseline/HateMM_Fusion.py
+    python Simple-Fusion/HateMM_Fusion.py
     ```
 
-2. **Train the Baseline Model on Hateful Memes**:
+2. **Train the Simple Fusion Model on Hateful Memes**:
     ```sh
-    python Baseline/HateMemesFusion.py
+    python Simple-Fusion/HateMemesFusion.py
     ```
 
 ## Running MO-Hate Architecture Experiments
@@ -112,6 +112,6 @@ For testing either on random or specific images from the test set, follow these 
     python test_memes.py
     ```
 
-**Note**: Some parts of the preprocessing and training codes for Baseline and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
+**Note**: Some parts of the preprocessing and training codes for Simple Embedding Fusion and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
 - [HateMM](https://github.com/hate-alert/HateMM)
 - [MO-Sarcation](https://github.com/mohit2b/MO-Sarcation)

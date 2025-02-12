@@ -1,7 +1,7 @@
 import pickle
 import torch
-from Baseline.HateMM_Fusion import Text_Model, Aud_Model, Combined_model, LSTM
-from Baseline.HateMM_Fusion import HateMM_Dataset
+from Simple-Fusion.HateMM_Fusion import Text_Model, Aud_Model, Combined_model, LSTM
+from Simple-Fusion.HateMM_Fusion import HateMM_Dataset
 import torch.nn as nn
 
 FOLDER_NAME = '/backup/girish_datasets/HateMM/'
