@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ## Preprocessing
 
-Before running the experiments, you need to preprocess the dataset to extract features. The preprocessing scripts are located in the [`Preprocessing/`]("Preprocessing/") directory. Make sure to specify the correct path to the downloaded datasets in the below code files.
+Before running the experiments, you need to preprocess the dataset to extract features. The preprocessing scripts are located in the [`Preprocessing/`](Preprocessing/) directory. Make sure to specify the correct path to the downloaded datasets in the below code files.
 
 1. **Video Frames and Audio Transcript**:
     ```sh
@@ -73,7 +73,7 @@ Before running the experiments, you need to preprocess the dataset to extract fe
 
 ## Running Simple Embedding Fusion Experiments
 
-The Simple Fusion architecture experiments are implemented in the [`Simple Fusion/`]("Simple-Fusion/") directory. To run the simple fusion experiments, follow these steps:
+The Simple Fusion architecture experiments are implemented in the [`Simple Fusion/`](Simple-Fusion/) directory. To run the simple fusion experiments, follow these steps:
 
 1. **Train the Simple Fusion Model on HateMM**:
     ```sh
@@ -87,7 +87,7 @@ The Simple Fusion architecture experiments are implemented in the [`Simple Fusio
 
 ## Running MO-Hate Architecture Experiments
 
-The MO-Hate architecture experiments are implemented in the [`MO-Hate/`]("MO-Hate/") directory. To run these experiments, follow these steps:
+The MO-Hate architecture experiments are implemented in the [`MO-Hate/`](MO-Hate/) directory. To run these experiments, follow these steps:
 
 1. **Train the MO-Hate Model on HateMM**:
     ```sh
