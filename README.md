@@ -114,9 +114,9 @@ For testing either on random or specific images from the test set, follow these 
     python test_memes.py
     ```
 
-# Cite
+## Citation
 ```
-@article{koushik2025robustframeworkmultimodalhate,
+@misc{koushik2025robustframeworkmultimodalhate,
       title={Towards a Robust Framework for Multimodal Hate Detection: A Study on Video vs. Image-based Content}, 
       author={Girish A. Koushik and Diptesh Kanojia and Helen Treharne},
       year={2025},
