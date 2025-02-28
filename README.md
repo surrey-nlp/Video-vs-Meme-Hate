@@ -114,6 +114,19 @@ For testing either on random or specific images from the test set, follow these 
     python test_memes.py
     ```
 
+# Cite
+```
+@article{koushik2025robustframeworkmultimodalhate,
+      title={Towards a Robust Framework for Multimodal Hate Detection: A Study on Video vs. Image-based Content}, 
+      author={Girish A. Koushik and Diptesh Kanojia and Helen Treharne},
+      year={2025},
+      eprint={2502.07138},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2502.07138}, 
+}
+```
+
 **Note**: Some parts of the preprocessing and training codes for Simple Embedding Fusion and MO-Hate have been taken from their respective GitHub repositories. Please refer to the following links for more details:
 - [HateMM](https://github.com/hate-alert/HateMM)
 - [MO-Sarcation](https://github.com/mohit2b/MO-Sarcation)
