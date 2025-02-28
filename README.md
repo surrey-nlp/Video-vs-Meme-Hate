@@ -1,3 +1,5 @@
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/towards-a-robust-framework-for-multimodal/hate-speech-detection-on-hatemm)](https://paperswithcode.com/sota/hate-speech-detection-on-hatemm?p=towards-a-robust-framework-for-multimodal)
+
 # Hate Speech Detection in Videos and Memes 
 
 This repository contains code for detecting hate speech in videos and memes using multimodal architectures. The project includes Simple Embedding Fusion (aka Simple Fusion) and MO-Hate architectures.
